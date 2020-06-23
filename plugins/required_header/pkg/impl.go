@@ -136,6 +136,8 @@ func (c *RequiredHeaderAuthService) Authorize(ctx context.Context, request *api.
 						}},
 					},
 				}
+
+				response.UserInfo.UserID = "test-user"
 				return response, nil
 			}
 			logger(ctx).Infow("Header value does not match allowed values, denying access.")
