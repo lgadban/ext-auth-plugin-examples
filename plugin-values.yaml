@@ -1,0 +1,10 @@
+global:
+  extensions:
+    extAuth:
+      plugins:
+        my-plugin:
+          image:
+            repository: ext-auth-plugin-examples
+            registry: lgadban
+            pullPolicy: IfNotPresent
+            tag: 0.0.1 # change this to your GlooE installation version
