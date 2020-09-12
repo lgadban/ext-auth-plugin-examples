@@ -1,0 +1,17 @@
+apiVersion: enterprise.gloo.solo.io/v1
+kind: AuthConfig
+metadata:
+  name: plugin-auth
+  namespace: gloo-system
+spec:
+  configs:
+  - pluginAuth:
+      name: RequiredHeader
+      pluginFileName: RequiredHeader.so
+      exportedSymbolName: Plugin
+      config:
+        RequiredHeader: my-header
+        AllowedValues:
+        - foo
+        - bar
+
