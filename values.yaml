@@ -1,0 +1,23 @@
+observability:
+  enabled: false
+prometheus:
+  enabled: false
+grafana:
+  defaultInstallationEnabled: false
+gloo:
+  gatewayProxies:
+    gatewayProxy:
+      service:
+        httpNodePort: 31337
+        type: NodePort
+global:
+  extensions:
+    extAuth:
+      plugins:
+        my-plugin:
+          image:
+            repository: gloo-ext-auth-plugin-required_header-1.5.1
+            registry: lgadban
+            pullPolicy: IfNotPresent
+            tag: 0.0.1
+

@@ -3,8 +3,12 @@ module github.com/solo-io/ext-auth-plugin-examples
 go 1.14
 
 require (
+	cloud.google.com/go/pubsub v1.1.0 // indirect
+	github.com/OneOfOne/xxhash v1.2.5 // indirect
 	github.com/avast/retry-go v2.4.3+incompatible
 	github.com/aws/aws-sdk-go v1.34.9
+	github.com/bxcodec/faker v2.0.1+incompatible // indirect
+	github.com/chai2010/gettext-go v0.0.0-20170215093142-bf70f2a70fb1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/elazarl/goproxy/ext v0.0.0-20191011121108-aa519ddbe484 // indirect
 	github.com/envoyproxy/go-control-plane v0.9.6-0.20200529035633-fc42e08917e9
@@ -16,7 +20,10 @@ require (
 	github.com/golang/mock v1.4.4
 	// protobuf v1.4.x uses their v2 API, including breaking changes to reflection: causes Gloo to go into CrashLoopBackOff
 	github.com/golang/protobuf v1.4.2
+	github.com/google/martian v2.1.1-0.20190517191504-25dcb96d9e51+incompatible // indirect
 	github.com/google/wire v0.4.0
+	github.com/goph/emperror v0.17.2 // indirect
+	github.com/gophercloud/gophercloud v0.6.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.1-0.20190118093823-f849b5445de4
 	github.com/hashicorp/consul/api v1.3.0
 	github.com/hashicorp/go-multierror v1.0.0
@@ -29,10 +36,10 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.2.1
 	github.com/prometheus/prometheus v2.5.0+incompatible
+	github.com/prometheus/tsdb v0.10.0 // indirect
 	github.com/rotisserie/eris v0.4.0
 	github.com/solo-io/anyvendor v0.0.1
 	github.com/solo-io/envoy-operator v0.1.4
-	github.com/solo-io/ext-auth-plugin-examples v0.1.2-0.20191219182743-362e50211779
 	github.com/solo-io/ext-auth-plugins v0.1.2
 	github.com/solo-io/gloo v1.5.1
 	github.com/solo-io/go-utils v0.16.6
@@ -40,6 +47,9 @@ require (
 	github.com/solo-io/solo-apis v0.0.0-20200807174746-9ea7dfeef2cb
 	github.com/solo-io/solo-kit v0.13.13
 	github.com/tredoe/osutil v0.0.0-20191018075336-e272fdda81c8 // indirect
+	github.com/ugorji/go v1.1.5-pre // indirect
+	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
+	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	go.opencensus.io v0.22.4
 	go.uber.org/atomic v1.6.0
 	go.uber.org/zap v1.15.0

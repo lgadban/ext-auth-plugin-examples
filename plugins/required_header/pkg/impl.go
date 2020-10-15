@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 
+	"google.golang.org/grpc/codes"
+
 	envoyauthv2 "github.com/envoyproxy/go-control-plane/envoy/service/auth/v2"
 	"github.com/solo-io/ext-auth-plugins/api"
 	"github.com/solo-io/go-utils/contextutils"
@@ -78,8 +80,13 @@ func (c *RequiredHeaderAuthService) Authorize(ctx context.Context, request *api.
 		log.Fatalf("could not CheckRequest: %v", err)
 	}
 
-	log.Printf("successfully checked, response: %v\n", checkResponse.GetHttpResponse())
-	logger(ctx).Infow("Required header not found, denying access")
+	//log.Printf("successfully checked, response: %v\n", checkResponse.GetHttpResponse())
+	log.Printf("successfully checked, response: %v\n", checkResponse)
+	if checkResponse.GetStatus().GetCode() == int32(codes.OK) {
+		logger(ctx).Infow("OK response from auth service")
+	} else {
+		logger(ctx).Infow("NOT OK response from auth service")
+	}
 
 	response := &api.AuthorizationResponse{
 		CheckResponse: *checkResponse,
