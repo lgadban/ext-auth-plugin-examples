@@ -4,12 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 
-	envoycorev2 "github.com/envoyproxy/go-control-plane/envoy/api/v2/core"
 	envoyauthv2 "github.com/envoyproxy/go-control-plane/envoy/service/auth/v2"
 	"github.com/solo-io/ext-auth-plugins/api"
 	"github.com/solo-io/go-utils/contextutils"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
 )
 
 var (
@@ -64,33 +65,27 @@ func (c *RequiredHeaderAuthService) Start(context.Context) error {
 }
 
 func (c *RequiredHeaderAuthService) Authorize(ctx context.Context, request *api.AuthorizationRequest) (*api.AuthorizationResponse, error) {
-	for key, value := range request.CheckRequest.GetAttributes().GetRequest().GetHttp().GetHeaders() {
-		if key == c.RequiredHeader {
-			logger(ctx).Infow("Found required header, checking value.", "header", key, "value", value)
-
-			if _, ok := c.AllowedValues[value]; ok {
-				logger(ctx).Infow("Header value match. Allowing request.")
-				response := api.AuthorizedResponse()
-
-				// Append extra header
-				response.CheckResponse.HttpResponse = &envoyauthv2.CheckResponse_OkResponse{
-					OkResponse: &envoyauthv2.OkHttpResponse{
-						Headers: []*envoycorev2.HeaderValueOption{{
-							Header: &envoycorev2.HeaderValue{
-								Key:   "matched-allowed-headers",
-								Value: "true",
-							},
-						}},
-					},
-				}
-				return response, nil
-			}
-			logger(ctx).Infow("Header value does not match allowed values, denying access.")
-			return api.UnauthorizedResponse(), nil
-		}
+	conn, err := grpc.Dial("custom-ext-auth.default.svc.cluster.local:50051", grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
 	}
+	defer conn.Close()
+
+	extAuthClient := envoyauthv2.NewAuthorizationClient(conn)
+
+	checkResponse, err := extAuthClient.Check(context.Background(), request.CheckRequest)
+	if err != nil {
+		log.Fatalf("could not CheckRequest: %v", err)
+	}
+
+	log.Printf("successfully checked, response: %v\n", checkResponse.GetHttpResponse())
 	logger(ctx).Infow("Required header not found, denying access")
-	return api.UnauthorizedResponse(), nil
+
+	response := &api.AuthorizationResponse{
+		CheckResponse: *checkResponse,
+	}
+
+	return response, nil
 }
 
 func logger(ctx context.Context) *zap.SugaredLogger {
